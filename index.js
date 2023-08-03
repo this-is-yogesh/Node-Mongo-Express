@@ -30,26 +30,52 @@
 
 //4.) server side dynamic rendering
 
-const http = require("http");
-const fs = require("fs");
-const data = JSON.parse(fs.readFileSync("data.json", "utf-8"));
-let index = fs.readFileSync("index.html", "utf-8");
+// const http = require("http");
+// const fs = require("fs");
+// const data = JSON.parse(fs.readFileSync("data.json", "utf-8"));
+// let index = fs.readFileSync("index.html", "utf-8");
 
-
-const server = http.createServer((req, res) => {
-  if (req.url.startsWith("/products")) {
-    const id = req.url.split("/")[2];
-    const product = data.products.find((p) => p.id === (+id));
-    let mindex = index
-    .replace("**url**", product.thumbnail)
-    .replace("**title**", product.title)
-    .replace("**price**", product.price)
-    .replace("**rating**", product.rating);
-    res.setHeader("Content-type", "text/html");
-    res.end(mindex);
-    console.log('server')
-  }
-});
+// const server = http.createServer((req, res) => {
+//   if (req.url.startsWith("/products")) {
+//     const id = req.url.split("/")[2];
+//     const product = data.products.find((p) => p.id === (+id));
+//     let mindex = index
+//     .replace("**url**", product.thumbnail)
+//     .replace("**title**", product.title)
+//     .replace("**price**", product.price)
+//     .replace("**rating**", product.rating);
+//     res.setHeader("Content-type", "text/html");
+//     res.end(mindex);
+//     console.log('server')
+//   }
+// });
 
 // server.listen(8080);
 
+//5.)
+const express = require("express");
+const server = express();
+
+const auth = (req, res, next) => {
+  // if (req.query.password == 123) {
+  //   next();
+  // } else {
+  //   res.sendStatus(401);
+  // }
+  next()
+};
+
+
+server.get("/product/:id", auth, (req,res) => {
+if(req.params.id == 3){
+  res.json({ type: "Response" });
+}
+else{
+  res.json({ type: "onse" });
+  
+}
+
+console.log(req.params)
+});
+
+server.listen(8080);
